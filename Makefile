@@ -17,11 +17,13 @@ FFMPEG_WEBM_BC = build/ffmpeg-webm/ffmpeg.bc
 all: wav
 wav: ffmpeg-wav.js ffmpeg-worker-wav.js
 
-clean: clean-js \
+clean: clean-js clean-wasm \
 	clean-opus clean-libvpx clean-ffmpeg-webm \
 	clean-lame clean-x264 clean-ffmpeg-mp4
 clean-js:
 	rm -f ffmpeg*.js
+clean-wasm:
+	rm -f ffmpeg*.wasm
 clean-opus:
 	cd build/opus && git clean -xdf
 clean-libvpx:
@@ -99,7 +101,9 @@ EMCC_COMMON_ARGS = \
 	-O3 \
 	--closure 1 \
 	--memory-init-file 0 \
-	-s WASM=0 \
+	-s WASM=1 \
+	-s TEXTDECODER=0 \
+	-s DYNAMIC_EXECUTION=0 \
 	-s WASM_ASYNC_COMPILATION=0 \
 	-s ASSERTIONS=0 \
 	-s EXIT_RUNTIME=1 \
